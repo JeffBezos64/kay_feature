@@ -1,0 +1,17 @@
+[project]
+name = "kay_feature"
+description = "This package contains the code to build the vectorizers using the alternate feature representations."
+version = "0.0.0"
+readme = "README.md"
+dependencies = [
+    "gensim",
+]
+classifiers = [
+    "Private :: Do Not Upload",
+]
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages]
+find = {}
