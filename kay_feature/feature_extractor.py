@@ -1,3 +1,12 @@
+import pandas as pd
+import numpy as np
+from gensim.models.word2vec import Word2Vec
+from collections import Counter, defaultdict
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
+
+
+
 class TfidfEmbeddingVectorizer(object):
     def __init__(self, word2vec):
         self.word2vec = word2vec
@@ -25,3 +34,5 @@ class TfidfEmbeddingVectorizer(object):
                 for words in X
             ])
 
+
+class TfidfEmbeddingVectorizer(object)

@@ -5,6 +5,11 @@ version = "0.0.0"
 readme = "README.md"
 dependencies = [
     "gensim",
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "seaborn",
+    "matplotlib"
 ]
 classifiers = [
     "Private :: Do Not Upload",
