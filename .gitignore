@@ -1,0 +1,6 @@
+kay_feature.egg-info/
+test-venv/
+__pycache__/
+kay_feature/__pycache__/*
+*.pyc
+*.pyo
