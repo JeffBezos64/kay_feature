@@ -2,10 +2,7 @@ import pandas as pd
 import numpy as np
 from gensim.models.word2vec import Word2Vec
 from collections import Counter, defaultdict
-from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.feature_extraction.text import TfidfVectorizer
-
-
 
 class NonGenSimMeanTfidfEmbeddingVectorizer(object):
     def __init__(self, embedder):
@@ -31,8 +28,6 @@ class NonGenSimMeanTfidfEmbeddingVectorizer(object):
                 for words in X
             ])
 
-
-
 class GenSimMeanTfidfEmbeddingVectorizer(object):
     def __init__(self, word2vec):
         self.word2vec = word2vec
@@ -45,9 +40,6 @@ class GenSimMeanTfidfEmbeddingVectorizer(object):
     def fit(self, X, y):
         tfidf = TfidfVectorizer(analyzer=lambda x: x)
         tfidf.fit(X)
-        # if a word was never seen - it must be at least as infrequent
-        # as any of the known words - so the default idf is the max of 
-        # known idf's
         max_idf = max(tfidf.idf_)
         self.word2weight = defaultdict(
             lambda: max_idf, 
