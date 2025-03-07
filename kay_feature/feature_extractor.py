@@ -16,7 +16,7 @@ from language_checkers.pos_tagger import POSTagger
 
 from tqdm import tqdm
 import nltk
-
+#TODO Tweak so that we can vary the vocab size!
 class NonGenSimMeanTfidfEmbeddingVectorizer(object):
     def __init__(self, embedder):
         self.embedder = embedder
@@ -90,7 +90,7 @@ class EmbeddingFeatureExtractor():
         X = [self._remove_punctuation(x) for x in X]
         X = [nltk.word_tokenize(x) for x in X]
         return X
-        
+
     def _clean_text(self, text: str) -> str:
         return text.replace('\n', ' ')
 
