@@ -27,6 +27,9 @@ class NonGenSimMeanTfidfEmbeddingVectorizer(object):
         tfidf = TfidfVectorizer(analyzer=lambda x: x)
         tfidf.fit(X)
         max_idf = max(tfidf.idf_)
+        print('inside NGSMTFE - about to print feature names')
+        print(tfidf.get_feature_names_out())
+        print(len(tfidf.get_feature_names_out()))
         self.word2weight = defaultdict(
             lambda: max_idf,
             [(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
@@ -35,11 +38,8 @@ class NonGenSimMeanTfidfEmbeddingVectorizer(object):
 
     def transform(self, X):
         return np.array([
-                np.mean([self.embedder.vec(w) * self.word2weight[w]
-                         for w in words if w in self.word2vec] or
-                        [np.zeros(self.dim)], axis=0)
-                for words in X
-            ])
+                np.mean([self.embedder.vec(w) * self.word2weight[w] for w in words]) 
+                for words in tqdm(X)])
 
 class GenSimMeanTfidfEmbeddingVectorizer(object):
     def __init__(self, word2vec):
@@ -70,9 +70,9 @@ class GenSimMeanTfidfEmbeddingVectorizer(object):
 
 #, remove_stopwords=True make sure to include stopwords!
 class EmbeddingFeatureExtractor():
-    def __init__(self, vectorizer=None, spell_check_flag=True, max_edit_distance=2):
-        self._vectorizer = vectorizer
-        self.spell_check_flag = spell_check
+    def __init__(self, vectorizer=None, spell_check_flag=False, max_edit_distance=2):
+        self.vectorizer = vectorizer
+        self.spell_check_flag = spell_check_flag
         self._spell_checker = SpellChecker(max_edit_distance=max_edit_distance)
 
     def transform_spelling(self, X):
@@ -99,7 +99,7 @@ class EmbeddingFeatureExtractor():
 
     def transform(self, X):
         X = self.preprocess(X)
-        if spell_check_flag == True:
+        if self.spell_check_flag == True:
             X = self.spell_check(X)
         return self._vectorizer.transform(X)
         
