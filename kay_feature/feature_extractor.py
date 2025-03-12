@@ -27,9 +27,6 @@ class NonGenSimMeanTfidfEmbeddingVectorizer(object):
         tfidf = TfidfVectorizer(analyzer=lambda x: x)
         tfidf.fit(X)
         max_idf = max(tfidf.idf_)
-        print('inside NGSMTFE - about to print feature names')
-        print(tfidf.get_feature_names_out())
-        print(len(tfidf.get_feature_names_out()))
         self.word2weight = defaultdict(
             lambda: max_idf,
             [(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
