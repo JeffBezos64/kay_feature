@@ -13,6 +13,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from language_checkers.spell_checker import SpellChecker
 from language_checkers.grammar_checker import GrammarChecker
 from language_checkers.pos_tagger import POSTagger
+from scipy import sparse
 
 from tqdm import tqdm
 import nltk
@@ -37,6 +38,18 @@ class NonGenSimMeanTfidfEmbeddingVectorizer(object):
         return np.array([
                 np.mean([self.embedder.vec(w) * self.word2weight[w] for w in words]) 
                 for words in tqdm(X)])
+
+    def fit_transform(self, X, y):
+        tfidf = TfidfVectorizer(analyzer=lambda x: x)
+        tfidf_data = tfidf.fit_transform(X)
+        tfidf_names = tfidf.get_feature_names_out()
+        max_idf=max(tfidf.idf_)
+        for row in tqdm(range(0, tfidf_data.shape[0]), desc='processing row - column level is supressed'):
+                for col in tfidf_data[row].indices:
+                    tfidf_data[row,col] = np.mean(tfidf_data[row,col] * self.embedder.vec(tfidf_names[col]))
+        tfidf_data.eliminate_zeros()
+        return tfidf_data
+
 
 class GenSimMeanTfidfEmbeddingVectorizer(object):
     def __init__(self, word2vec):
