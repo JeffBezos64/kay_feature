@@ -34,11 +34,6 @@ class NonGenSimMeanTfidfEmbeddingVectorizer(object):
 
         return self
 
-    def transform(self, X):
-        return np.array([
-                np.mean([self.embedder.vec(w) * self.word2weight[w] for w in words]) 
-                for words in tqdm(X)])
-
     def fit_transform(self, X, y):
         tfidf = TfidfVectorizer(analyzer=lambda x: x)
         tfidf_data = tfidf.fit_transform(X)
