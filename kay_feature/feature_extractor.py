@@ -35,7 +35,7 @@ class NonGenSimMeanTfidfEmbeddingVectorizer(object):
         return self
 
     def fit_transform(self, X, y):
-        tfidf = TfidfVectorizer(analyzer=lambda x: x)
+        tfidf = TfidfVectorizer(analyzer=lambda x: x, max_features=32768)
         tfidf_data = tfidf.fit_transform(X)
         tfidf_names = tfidf.get_feature_names_out()
         max_idf=max(tfidf.idf_)
