@@ -73,4 +73,18 @@ class GenSimMeanTfidfEmbeddingVectorizer(object):
                 for words in X
             ])
 
-        
+
+class GensimEmbed(object):
+    def __init__(self, model, OOVRandom=False):
+        self.model = model
+        self.OOVRandom = OOVRandom
+        self.dim = model['the'].shape[0]
+
+    def vec(self, word):
+        try:
+            return self.model[word]
+        except KeyError:
+            if self.OOVRandom == True:
+                return np.random(self.dim,)
+            else:
+                return np.zeros(self.dim,)
