@@ -56,6 +56,6 @@ class GensimEmbed(object):
             return self.model[word]
         except KeyError:
             if self.OOVRandom == True:
-                return np.random(self.dim,)
+                return np.random.rand(self.dim,)
             else:
                 return np.zeros(self.dim,)
