@@ -19,26 +19,26 @@ from tqdm import tqdm
 import nltk
 #TODO Tweak so that we can vary the vocab size!
 class NonGenSimMeanTfidfEmbeddingVectorizer(object):
-    def __init__(self, embedder):
+    def __init__(self, embedder, vectorizer=None):
         self.embedder = embedder
         self.word2weight = None
+        self.vectorizer = vectorizer
         self.dim = len(self.embedder.vec('the'))
 
     def fit(self, X, y):
-        tfidf = TfidfVectorizer(analyzer=lambda x: x)
+        #jank workaround so I can save and use the vectorizer for data transforms for my OOD experiment.
+        tfidf = TfidfVectorizer(analyzer=lambda x: x, max_features=8192)
         tfidf.fit(X)
-        max_idf = max(tfidf.idf_)
-        self.word2weight = defaultdict(
-            lambda: max_idf,
-            [(w, tfidf.idf_[i]) for w, i in tfidf.vocabulary_.items()])
-
-        return self
+        return tfidf
 
     def fit_transform(self, X, y):
-        tfidf = TfidfVectorizer(analyzer=lambda x: x, max_features=8192)
-        tfidf_data = tfidf.fit_transform(X)
-        tfidf_names = tfidf.get_feature_names_out()
-        max_idf=max(tfidf.idf_)
+        if self.vectorizer == None:
+            tfidf = TfidfVectorizer(analyzer=lambda x: x, max_features=8192)
+            tfidf_data = tfidf.fit_transform(X)
+        else:
+            tfidf_data = self.vectorizer.transform(X)
+        tfidf_names = self.vectorizer.get_feature_names_out()
+        max_idf=max(self.vectorizer.idf_)
         for row in tqdm(range(0, tfidf_data.shape[0]), desc='processing row - column level is supressed'):
                 for col in tfidf_data[row].indices:
                     tfidf_data[row,col] = np.mean(tfidf_data[row,col] * self.embedder.vec(tfidf_names[col]))
